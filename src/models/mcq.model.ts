@@ -8,6 +8,7 @@ export interface MCQ {
 }
 
 export interface MCQList {
+  uniqueId:string;
   userId: string;
   questionsLists: MCQ[];
   topic: string;
@@ -17,7 +18,10 @@ export interface MCQList {
 }
 
 const MCQQuestionSchema = new Schema<MCQ>({
-  id: { type: String, required: true },
+  id: {
+    type: String,
+    required: true
+  },
   question: { type: String, required: true },
   options: {
     type: [String],
@@ -35,6 +39,11 @@ const MCQQuestionSchema = new Schema<MCQ>({
 });
 
 const MCQListSchema = new Schema<MCQList>({
+  uniqueId:{
+    type:String,
+    required:true,
+    unique:true,
+  },
   userId:{
     type:String,
     required:true,
@@ -64,5 +73,4 @@ const MCQListSchema = new Schema<MCQList>({
   }
 });
 
-export const MCQListModel =
-  models.MCQList || model<MCQList>("MCQList", MCQListSchema);
+export const MCQListModel = models.MCQList || model<MCQList>("MCQList", MCQListSchema);

@@ -1,4 +1,5 @@
 import { AppleIcon, FacebookIcon, GithubIcon, GoogleIcon, InstagramIcon, LinkedinIcon, MicrosoftIcon, XIcon } from "@/components/auth/icons";
+import { BookOpen, FileText, Briefcase, Calendar, Lightbulb, CalendarDays, ClipboardEdit, CheckSquare, TrendingUp, FolderPlus, Users, Presentation, BarChart3, Target, Mail } from "lucide-react";
 
 export type Provider = 'google' | 'github' | 'apple' | 'microsoft' | 'facebook' | 'x' | 'linkedin' | 'instagram';
 
@@ -62,7 +63,7 @@ export const socialProviders: Record<Provider, ProviderProps> = {
 
 export const NAV_LINKS = [
   { name: 'Room', href: '/room', isProtected:true },
-  {name:'Templates',href:'/templates'},
+  {name:'Explore',href:'/explore'},
   { name: 'About', href: '/about'},
 ];
 
@@ -151,11 +152,6 @@ export const USER_TYPE = [
   { value: "founder", label: "Founder" }
 ];
 
-export const AUTH_TYPES = {
-  LOGIN: "login",
-  SIGNUP: "signup"
-};
-
 export const COLORS = {
   primary: "rgba(255, 193, 7, 0.1)",
   yellow: "#FFC107",
@@ -178,6 +174,14 @@ export const roleColors = {
     darkBg: 'dark:bg-yellow-950/20'
   },
   teacher: {
+    border: 'border-green-300',
+    bg: 'bg-green-50/50',
+    text: 'text-green-700',
+    button: 'bg-green-500 hover:bg-green-600',
+    darkBorder: 'dark:border-green-800',
+    darkBg: 'dark:bg-green-950/20'
+  },
+  founder: {
     border: 'border-orange-300',
     bg: 'bg-orange-50/50',
     text: 'text-orange-700',
@@ -185,99 +189,68 @@ export const roleColors = {
     darkBorder: 'dark:border-orange-800',
     darkBg: 'dark:bg-orange-950/20'
   },
-  founder: {
-    border: 'border-green-300',
-    bg: 'bg-green-50/50',
-    text: 'text-green-700',
-    button: 'bg-green-500 hover:bg-green-600',
-    darkBorder: 'dark:border-green-800',
-    darkBg: 'dark:bg-green-950/20'
-  }
 };
 
 export const ROLE_DATA = {
   student: {
-    title: "Student Dashboard",
-    description: "Enhance your learning journey with AI-powered tools",
-    primaryColor: "bg-yellow-100 dark:bg-yellow-900/20",
-    accentColor: "text-yellow-600 dark:text-yellow-400",
-    actions: [
-      {
-        title: "Start Learning with AI",
-        description: "Personalized learning paths and explanations",
-        icon: "Brain",
-        content: "ai-learning"
-      },
-      {
-        title: "Practice MCQs",
-        description: "Test your knowledge with AI-generated questions",
-        icon: "FileQuestion",
-        content: "mcq"
-      },
-      {
-        title: "Build Your Resume",
-        description: "AI-assisted resume builder with templates",
-        icon: "FileText",
-        content: "resume-builder"
-      }
-    ],
-    greeting: "Ready to level up your skills?"
+    title: "Student",
+    color: "rgba(205, 184, 0, 0.1)",
+    accent: "#FFCC00",
+    features: [
+      { title: "Start Your Learning Journey", desc: "AI-powered personalized learning path", icon: BookOpen },
+      { title: "Generate MCQ Practice Sheets", desc: "Automated question generation for revision", icon: FileText },
+      { title: "Build Your Resume", desc: "AI-crafted professional resumes", icon: Briefcase},
+      { title: "Study Plan Generator", desc: "Custom weekly learning schedules", icon: Calendar },
+      { title: "Concept Explainer", desc: "Simplify complex topics instantly", icon: Lightbulb }
+    ]
   },
   teacher: {
-    title: "Teacher Dashboard",
-    description: "Create engaging content and manage your classes",
-    primaryColor: "bg-green-100 dark:bg-green-900/20",
-    accentColor: "text-green-600 dark:text-green-400",
-    actions: [
-      {
-        title: "Create Test",
-        description: "Generate customized tests and assessments",
-        icon: "ClipboardList",
-        content: "mcq"
-      },
-      {
-        title: "Lesson Planning",
-        description: "AI-powered lesson plan generator",
-        icon: "CalendarDays",
-        content: "lesson-plan"
-      },
-      {
-        title: "Grade Assignments",
-        description: "Review and grade student submissions",
-        icon: "CheckSquare",
-        content: "assignments"
-      }
-    ],
-    greeting: "Shape the future of education"
+    title: "Teacher",
+    color: "rgba(34, 197, 94, 0.1)",
+    accent: "#22C55E",
+    features: [
+      { title: "Lesson Planning", desc: "AI-assisted curriculum design", icon: CalendarDays },
+      { title: "Create Assignments", desc: "Generate tailored exercises", icon: ClipboardEdit },
+      { title: "Assessment Builder", desc: "Create tests with answer keys", icon: CheckSquare },
+      { title: "Student Progress Tracker", desc: "Monitor class performance", icon: TrendingUp },
+      { title: "Resource Generator", desc: "Teaching materials creation", icon: FolderPlus }
+    ]
   },
   founder: {
-    title: "Founder Dashboard",
-    description: "Manage hiring and team development",
-    primaryColor: "bg-orange-100 dark:bg-orange-900/20",
-    accentColor: "text-orange-600 dark:text-orange-400",
-    actions: [
-      {
-        title: "Create Interview Assignments",
-        description: "Design technical interviews and tasks",
-        icon: "Briefcase",
-        content: "assignments"
-      },
-      {
-        title: "Team Assessments",
-        description: "Evaluate team performance and skills",
-        icon: "Users",
-        content: "assessments"
-      },
-      {
-        title: "Project Planning",
-        description: "Strategic planning with AI insights",
-        icon: "Target",
-        content: "project-plan"
-      }
-    ],
-    greeting: "Build your dream team"
+    title: "Founder",
+    color: "rgba(249, 115, 22, 0.1)",
+    accent: "#F97316",
+    features: [
+      { title: "Interview Questions", desc: "Prepare technical interviews", icon: Users },
+      { title: "Pitch Deck Builder", desc: "Create investor presentations", icon: Presentation },
+      { title: "Market Research", desc: "AI-powered industry analysis", icon: BarChart3 },
+      { title: "Business Plan Generator", desc: "Structured planning documents", icon: Target },
+      { title: "Investor Outreach", desc: "Craft compelling communications", icon: Mail }
+    ]
   }
+} as const;
+
+export type RoleType = keyof typeof ROLE_DATA;
+
+export const DIFFICULTY_CONFIG = {
+  easy: { label: 'Easy', color: 'bg-green-100 text-green-800 border-green-200' },
+  medium: { label: 'Medium', color: 'bg-yellow-100 text-yellow-800 border-yellow-200' },
+  hard: { label: 'Hard', color: 'bg-red-100 text-red-800 border-red-200' }
 };
 
-export type UserRole = keyof typeof ROLE_DATA;
-export type ContentType = "default" | "mcq" | "ai-learning" | "resume-builder" | "lesson-plan" | "assignments" | "assessments" | "project-plan";
+export const OPTION_LETTERS = ['A', 'B', 'C', 'D'];
+
+export const OPTION_COLORS = [
+  'bg-amber-50/80 border-amber-300 hover:border-amber-400',
+  'bg-emerald-50/80 border-emerald-300 hover:border-emerald-400',
+  'bg-orange-50/80 border-orange-300 hover:border-orange-400',
+  'bg-red-50/80 border-red-300 hover:border-red-400'
+];
+
+export const RETRO_COLORS = {
+  primary: 'bg-amber-50/10',
+  accent: 'text-amber-800',
+  border: 'border-amber-300',
+  lightBg: 'bg-amber-50/50',
+  cardBg: 'bg-white/95'
+};

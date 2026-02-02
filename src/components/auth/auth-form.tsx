@@ -72,7 +72,7 @@ function FormInput({ mode, inputFields }: AuthFormProps) {
       const params = new URLSearchParams(searchParams.toString());
 
       params.set("role", watchedRole);
-      router.replace(`${currentPath}?role=${params.toString()}`);
+      router.replace(`${currentPath}?${params.toString()}`);
     }
   }, [watchedRole, roleParam, mode, router]);
 
@@ -89,7 +89,7 @@ function FormInput({ mode, inputFields }: AuthFormProps) {
   };
 
   return (
-    <div className="min-h-screen w-full flex justify-center items-center p-4 bg-linear-to-b from-yellow-50/20 via-white to-orange-50/20 dark:from-gray-950 dark:via-black dark:to-gray-900">
+    <div className="min-h-160 w-full flex justify-center items-center p-4 bg-linear-to-b from-yellow-50/20 via-white to-orange-50/20 dark:from-gray-950 dark:via-black dark:to-gray-900">
       {verificationPending && (
         <div className="absolute h-[120vh] w-full backdrop-blur-xl z-20">
           <InputOTPControlled/>
@@ -123,33 +123,34 @@ function FormInput({ mode, inputFields }: AuthFormProps) {
         <CardContent className="px-8 pt-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit((data) => handleAuthSubmit(data))} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium">Select Role</FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        value={field.value}
-                        className="flex gap-4"
-                      >
-                        {USER_TYPE.map((type) => (
-                          <div key={type.value} className="flex items-center space-x-2">
-                            <RadioGroupItem value={type.value} id={type.value} />
-                            <Label htmlFor={type.value} className="cursor-pointer text-sm font-normal">
-                              {type.label}
-                            </Label>
-                          </div>
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage className="text-xs" />
-                  </FormItem>
-                )}
-              />
-
+              {mode==='signup' && (
+                <FormField
+                  control={form.control}
+                  name="role"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium">Select Role</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          value={field.value}
+                          className="flex gap-4"
+                        >
+                          {USER_TYPE.map((type) => (
+                            <div key={type.value} className="flex items-center space-x-2">
+                              <RadioGroupItem value={type.value} id={type.value} />
+                              <Label htmlFor={type.value} className="cursor-pointer text-sm font-normal">
+                                {type.label}
+                              </Label>
+                            </div>
+                          ))}
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+              )}
               {inputFields.map((field) => (
                 <FormField
                   key={field.name}

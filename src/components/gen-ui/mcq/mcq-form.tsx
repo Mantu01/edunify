@@ -19,7 +19,6 @@ const DIFFICULTY_LEVELS = [
   { value: 'easy', label: 'Easy' },
   { value: 'medium', label: 'Medium' },
   { value: 'hard', label: 'Hard' },
-  { value: 'expert', label: 'Expert' }
 ];
 
 const formSchema = z.object({
@@ -50,7 +49,7 @@ export default function MCQGeneratorForm() {
 
   const onSubmit = async (data: FormData) => {
     setIsGenerating(true);
-    setTamboInputValue(data.context || 'Generate MCQ according to the given form data.')
+    setTamboInputValue('Generate MCQ according to the given form data.');
     await submit({
       streamResponse: true,
       additionalContext: {

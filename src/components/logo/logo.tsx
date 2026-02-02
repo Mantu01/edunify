@@ -7,7 +7,7 @@ export default function Logo() {
       <div className="relative w-32 h-14">
         <Image 
           src="https://res.cloudinary.com/dqznmhhtv/image/upload/v1769211088/edunify-text_dkxzrj.png" 
-          alt="TezArt Logo"
+          alt="Edunify Logo"
           fill
           className="object-contain filter brightness-110 contrast-110"
           priority

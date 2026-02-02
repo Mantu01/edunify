@@ -5,7 +5,6 @@ export const emptyPropsSchema = z.object({});
 const loginSchema=z.object({
   email:z.string().email({ message: "Please enter a valid email address" }),
   password:z.string().min(8,{ message: "Password must be at least 8 characters long" }),
-  role:z.enum(['student', 'teacher', 'founder'])
 });
 
 const signupSchema=z.object({
@@ -20,41 +19,6 @@ const signupSchema=z.object({
   path:['confirmPassword']
 });
 
-const mcqItemSchema = z.object({
-  question: z.string(),
-  options: z.array(z.string()).min(2),
-  correctAnswer: z.number(),
-});
-
-const assignmentItemSchema = z.object({
-  title: z.string(),
-  description: z.string(),
-  dueDate: z.string(), 
-});
-
-const notesItemSchema = z.object({
-  title: z.string(),
-  content: z.string(),
-});
-
-export const contentSchema = z.discriminatedUnion("contentType", [
-  z.object({
-    contentType: z.literal("default"),
-    data: z.string(),
-  }),
-  z.object({
-    contentType: z.literal("mcq"),
-    data: z.array(mcqItemSchema),
-  }),
-  z.object({
-    contentType: z.literal("assignment"),
-    data: z.array(assignmentItemSchema),
-  }),
-  z.object({
-    contentType: z.literal("notes"),
-    data: z.array(notesItemSchema),
-  }),
-]);
 
 export const MCQListPropsSchema = z.object({
   questionsLists: z.array(z.object({
@@ -66,11 +30,20 @@ export const MCQListPropsSchema = z.object({
   topic: z.string(),
   difficulty: z.enum(['easy', 'medium', 'hard']),
   numberOfQuestions: z.number().positive(),
-  timer: z.number().positive()
+  timer: z.number().positive(),
 });
 
+export const notePropsSchema = z.object({
+  title: z.string(),
+  content: z.string().describe('The detailed content of the note.This can include text, bullet points, and other relevant information.'),
+  subject: z.string(),
+  noteType: z.enum(['summary', 'detailed', 'concept_map', 'flashcards', 'cheat_sheet', 'comparison', 'timeline', 'formula_sheet']),
+  depthLevel: z.enum(['basic', 'intermediate', 'advanced', 'expert']),
+});
+
+export type NoteProps = z.infer<typeof notePropsSchema>;
+
 export type MCQListProps = z.infer<typeof MCQListPropsSchema>;
-export type Content = z.infer<typeof contentSchema>;
 export type LoginSchemaType=z.infer<typeof loginSchema>;
 export type SignupSchemaType=z.infer<typeof signupSchema>;
 

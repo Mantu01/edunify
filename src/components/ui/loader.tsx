@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import Logo from "@/components/logo/logo";
 
-const PremiumLoader = ({ isLoading = true }) => {
+const Loader = ({ isLoading = true }) => {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -118,7 +118,7 @@ const PremiumLoader = ({ isLoading = true }) => {
                     "text-2xl font-semibold tracking-tight",
                     isDark ? "text-white" : "text-black"
                   )}>
-                    TezArt
+                    Edunify
                   </h1>
                 </motion.div>
 
@@ -195,4 +195,4 @@ const PremiumLoader = ({ isLoading = true }) => {
   );
 };
 
-export default PremiumLoader;
+export default Loader;

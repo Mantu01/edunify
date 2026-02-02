@@ -34,6 +34,7 @@ export const AuthProvider=({children}:{children:ReactNode})=>{
   const {signOut}=useClerk();
   
   const err=searchParams.get('err');
+  const selectedRole=searchParams.get('role');
   const mode = pathname.replace('/', '');
 
   useEffect(()=>{
@@ -53,7 +54,7 @@ export const AuthProvider=({children}:{children:ReactNode})=>{
         await signIn.authenticateWithRedirect({
           strategy: `oauth_${provider}`,
           redirectUrl:'/signup?err=not-found',
-          redirectUrlComplete: "/studio",
+          redirectUrlComplete: "/room",
         });
         toast.success("Redirecting to login...");
       } else {
@@ -63,8 +64,11 @@ export const AuthProvider=({children}:{children:ReactNode})=>{
         }
         await signUp.authenticateWithRedirect({
           strategy: `oauth_${provider}`,
+          unsafeMetadata:{
+            role:selectedRole
+          },
           redirectUrl:'/signup/continue',
-          redirectUrlComplete: "/credits",
+          redirectUrlComplete: "/room",
         });
         toast.success("Redirecting to signup...");
       }
@@ -92,7 +96,7 @@ export const AuthProvider=({children}:{children:ReactNode})=>{
             session:loginAttempt.createdSessionId,
           });
           toast.success('Logged In successful');
-          setTimeout(()=>router.push('/'),300);
+          setTimeout(()=>router.push('/room'),300);
         }
       } else {
         if(!isSignUpLoaded){
@@ -103,6 +107,9 @@ export const AuthProvider=({children}:{children:ReactNode})=>{
           username:signupData.username,
           emailAddress:signupData.email,
           password:signupData.password,
+          unsafeMetadata:{
+            role:selectedRole
+          }
         });
 
         await signUp.prepareEmailAddressVerification({

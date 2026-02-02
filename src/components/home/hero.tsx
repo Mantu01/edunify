@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, PlayCircle } from "lucide-react";
-import { useClerk } from "@clerk/nextjs";
+import { useClerk} from "@clerk/nextjs";
 
 export function Hero() {
   const {user}=useClerk();

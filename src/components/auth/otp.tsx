@@ -38,7 +38,7 @@ export function InputOTPControlled() {
           session:signupAttent.createdSessionId
         });
         toast.success('Verified Successfully');
-        setTimeout(()=>router.push('/credits'),300);
+        setTimeout(()=>router.push('/room'),300);
       }else if(signupAttent.status==='abandoned'){
         toast.error("Signup process was abandoned. Please try again.");
       }
@@ -50,12 +50,12 @@ export function InputOTPControlled() {
   };
 
   return (
-    <div className="w-full h-screen flex items-center justify-center p-4">
+    <div className="w-full h-150 flex items-center justify-center pt-20 g-white/90 ">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-2 pb-4">
           <div className="flex justify-center mb-4">
-            <div className="p-3 rounded-full bg-blue-100">
-              <CheckCircle className="h-8 w-8 text-blue-600" />
+            <div className="p-3 rounded-full bg-yellow-100">
+              <CheckCircle className="h-8 w-8 text-yellow-600" />
             </div>
           </div>
           <CardTitle className="text-2xl text-center">Two-Factor Authentication</CardTitle>
