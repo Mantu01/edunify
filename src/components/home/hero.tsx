@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, PlayCircle } from "lucide-react";
-import { useUser } from "@/contexts/user-context";
+import { useClerk } from "@clerk/nextjs";
 
 export function Hero() {
-  const {user}=useUser();
+  const {user}=useClerk();
   return (
     <section className="relative overflow-hidden py-20 md:py-32">
       <div className="container mx-auto px-4">
@@ -32,7 +32,7 @@ export function Hero() {
 
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-white px-8">
-              <Link href={user?'/chat':'/login'} className="flex items-center">
+              <Link href={user?'/room':'/login'} className="flex items-center">
                 Get Started
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>

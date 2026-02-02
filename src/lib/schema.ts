@@ -1,5 +1,7 @@
 import {z} from 'zod';
 
+export const emptyPropsSchema = z.object({});
+
 const loginSchema=z.object({
   email:z.string().email({ message: "Please enter a valid email address" }),
   password:z.string().min(8,{ message: "Password must be at least 8 characters long" }),
@@ -54,6 +56,20 @@ export const contentSchema = z.discriminatedUnion("contentType", [
   }),
 ]);
 
+export const MCQListPropsSchema = z.object({
+  questionsLists: z.array(z.object({
+    id: z.string(),
+    question: z.string(),
+    options: z.array(z.string()).length(4),
+    correctAnswer: z.number().min(0).max(3),
+  })),
+  topic: z.string(),
+  difficulty: z.enum(['easy', 'medium', 'hard']),
+  numberOfQuestions: z.number().positive(),
+  timer: z.number().positive()
+});
+
+export type MCQListProps = z.infer<typeof MCQListPropsSchema>;
 export type Content = z.infer<typeof contentSchema>;
 export type LoginSchemaType=z.infer<typeof loginSchema>;
 export type SignupSchemaType=z.infer<typeof signupSchema>;

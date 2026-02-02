@@ -5,7 +5,7 @@ import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/comp
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { useUser } from "@/contexts/user-context";
+import { useUser } from "@clerk/nextjs";
 
 const colorClasses = {
   yellow: "border-yellow-300 bg-yellow-50/50 dark:border-yellow-800 dark:bg-yellow-950/20",
@@ -38,7 +38,7 @@ export function CtaSection() {
               </CardHeader>
               <CardFooter>
                 <Button className="w-full" asChild>
-                  <Link href={user?'/chat':`/login?role=${role.role}`} className="flex items-center justify-center">
+                  <Link href={user?'/room':`/login?role=${role.role}`} className="flex items-center justify-center">
                     {role.cta}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>

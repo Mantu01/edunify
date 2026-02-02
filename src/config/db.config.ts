@@ -32,7 +32,7 @@ async function connectDB(): Promise<typeof mongoose> {
         bufferCommands: false,
       };
 
-      cached.promise = mongoose.connect(MONGODB_URI + '/edunify', opts).then((mongoose) => {
+      cached.promise = mongoose.connect(`${MONGODB_URI}/edunify`, opts).then((mongoose) => {
         return mongoose;
       }).catch((error: unknown) => {
         cached.promise = null;

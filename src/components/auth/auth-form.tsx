@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { roleColors, USER_TYPE } from "@/lib/constants";
 import { useSearchParams, useRouter } from "next/navigation";
 import SocialLogins from "./social-links";
+import { InputOTPControlled } from "./otp";
 
 export interface InputFieldTypes {
   name: keyof LoginSchemaType | keyof SignupSchemaType,
@@ -68,11 +69,14 @@ function FormInput({ mode, inputFields }: AuthFormProps) {
   useEffect(() => {
     if (watchedRole && watchedRole !== roleParam) {
       const currentPath = mode === 'login' ? '/login' : '/signup';
-      router.replace(`${currentPath}?role=${watchedRole}`);
+      const params = new URLSearchParams(searchParams.toString());
+
+      params.set("role", watchedRole);
+      router.replace(`${currentPath}?role=${params.toString()}`);
     }
   }, [watchedRole, roleParam, mode, router]);
 
-  const {handleSubmit: handleAuthSubmit,isLoading,showError}=useAuth();
+  const {handleSubmit: handleAuthSubmit,isLoading,showError,verificationPending}=useAuth();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
@@ -86,6 +90,11 @@ function FormInput({ mode, inputFields }: AuthFormProps) {
 
   return (
     <div className="min-h-screen w-full flex justify-center items-center p-4 bg-linear-to-b from-yellow-50/20 via-white to-orange-50/20 dark:from-gray-950 dark:via-black dark:to-gray-900">
+      {verificationPending && (
+        <div className="absolute h-[120vh] w-full backdrop-blur-xl z-20">
+          <InputOTPControlled/>
+        </div>
+      )}
       <Card className={`w-full max-w-md shadow-lg rounded-2xl overflow-hidden border-2 ${colors.border} ${colors.bg} ${colors.darkBorder} ${colors.darkBg}`}>
         <CardHeader className="space-y-6 px-8 pt-8 border-b border-border/40">
           <div className="flex justify-center">
@@ -107,13 +116,13 @@ function FormInput({ mode, inputFields }: AuthFormProps) {
               <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span>Invalid credentials. Please try again.</span>
+              <span>Email not found. Please Signup to create an account.</span>
             </div>
           )}
         </CardHeader>
         <CardContent className="px-8 pt-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit((data) => handleAuthSubmit(data, mode))} className="space-y-4">
+            <form onSubmit={form.handleSubmit((data) => handleAuthSubmit(data))} className="space-y-4">
               <FormField
                 control={form.control}
                 name="role"

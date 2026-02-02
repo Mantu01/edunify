@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import Provider from "@/contexts/Provider";
 import { Navigation } from "@/components/layout/navigation";
+import { auth } from "@clerk/nextjs/server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,17 +22,15 @@ export const metadata: Metadata = {
   icons:'https://res.cloudinary.com/dqznmhhtv/image/upload/v1769211087/edunify-logo_ntnwbi.png'
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default async function RootLayout({children,}: Readonly<{children: React.ReactNode;}>) {
+  const { getToken } = await auth();
+  const token = await getToken();
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Provider>
+        <Provider userToken={token || undefined} >
           <Navigation/>
           {children}
         </Provider>

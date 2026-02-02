@@ -60,6 +60,12 @@ export const socialProviders: Record<Provider, ProviderProps> = {
   }
 };
 
+export const NAV_LINKS = [
+  { name: 'Room', href: '/room', isProtected:true },
+  {name:'Templates',href:'/templates'},
+  { name: 'About', href: '/about'},
+];
+
 export const FEATURES = [
   {
     title: 'AI-Generated Dashboards',

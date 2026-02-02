@@ -1,105 +1,135 @@
-'use client'
-
 import { LoginSchemaType, SignupSchemaType } from "@/lib/schema";
-import { useRouter } from "next/navigation";
-import { createContext, ReactNode, useContext, useEffect, useState, useCallback } from "react";
+import { useClerk, useSignIn, useSignUp } from "@clerk/nextjs";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import Loader from '@/components/ui/loader';
 import { toast } from "sonner";
 import { Provider } from "@/lib/constants";
-import { useSearchParams } from "next/navigation";
 
-interface AuthContextType {
-  isLoading: boolean;
-  verificationPending: boolean;
-  showError: boolean;
-  handleSubmit: (data: LoginSchemaType | SignupSchemaType, mode: 'login' | 'signup') => Promise<void>;
-  loadingStates: Record<string, boolean>;
-  handleSocialLogin: (provider: Provider) => Promise<void>;
+interface AuthContext{
+  isLoading:boolean,
+  verificationPending:boolean,
+  showError:boolean,
+  handleSubmit:(data: LoginSchemaType | SignupSchemaType)=>void,
+  handleSignOut:()=>void;
+
+  loadingStates:Record<string, boolean>,
+  handleSocialLogin: (provider: Provider) => void,
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext=createContext<AuthContext | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider=({children}:{children:ReactNode})=>{
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [verificationPending, setVerificationPending] = useState<boolean>(false);
-  const [showError, setShowError] = useState<boolean>(false);
+  const [verificationPending,setVerificationPending]=useState<boolean>(false);
+  const {isLoaded: isSignInLoaded,signIn,setActive} = useSignIn();
+  const [showError,setShowError]=useState<boolean>(false);
+  const {isLoaded: isSignUpLoaded,signUp} = useSignUp();
   const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>({});
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const err = searchParams?.get('err') || null;
+  const router=useRouter();
+  const searchParams=useSearchParams();
+  const pathname = usePathname();
+  const {signOut}=useClerk();
+  
+  const err=searchParams.get('err');
+  const mode = pathname.replace('/', '');
 
-  useEffect(() => {
-    try {
-      if (err === 'not-found') {
-        setShowError(true);
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error('Error in useEffect:', error.message);
-      }
+  useEffect(()=>{
+    if(err==='not-found'){
+      setShowError(true);
     }
-  }, [err]);
+  },[searchParams,err]);
 
-  const handleSocialLogin = useCallback(async (provider: Provider): Promise<void> => {
+  const handleSocialLogin = async (provider: Provider) => {
+    setLoadingStates(prev => ({ ...prev, [provider]: true }));
     try {
-      setLoadingStates(prev => ({ ...prev, [provider]: true }));
-      toast.info(`${provider} login coming soon`);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        toast.error(error.message || "Something went wrong during authentication.");
+      if (mode === 'login') {
+        if (!isSignInLoaded) {
+          toast.error("Login is not ready yet.");
+          return;
+        }
+        await signIn.authenticateWithRedirect({
+          strategy: `oauth_${provider}`,
+          redirectUrl:'/signup?err=not-found',
+          redirectUrlComplete: "/studio",
+        });
+        toast.success("Redirecting to login...");
       } else {
-        toast.error("Something went wrong during authentication.");
+        if (!isSignUpLoaded) {
+          toast.error("Signup is not ready yet.");
+          return;
+        }
+        await signUp.authenticateWithRedirect({
+          strategy: `oauth_${provider}`,
+          redirectUrl:'/signup/continue',
+          redirectUrlComplete: "/credits",
+        });
+        toast.success("Redirecting to signup...");
       }
+    } catch{
+      toast.error("Something went wrong during authentication.");
     } finally {
       setLoadingStates(prev => ({ ...prev, [provider]: false }));
     }
-  }, []);
+  };
 
-  const handleSubmit = useCallback(async (data: LoginSchemaType | SignupSchemaType, mode: 'login' | 'signup'): Promise<void> => {
+  async function handleSubmit(data: LoginSchemaType | SignupSchemaType) {
     setIsLoading(true);
-    setShowError(false);
-    
     try {
-      const endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/signup';
-      
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json().catch(() => ({ error: 'Failed to parse response' }));
-
-      if (!response.ok) {
-        setShowError(true);
-        toast.error(result.error || 'An error occurred');
-        return;
-      }
-
-      toast.success(result.message || (mode === 'login' ? 'Login successful' : 'Account created successfully'));
-      
-      try {
-        window.dispatchEvent(new CustomEvent('auth-success'));
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          console.error('Error dispatching auth-success event:', error.message);
+      if (mode === 'login') {
+        if(!isSignInLoaded){
+          return <Loader/>
         }
-      }
-
-      router.push(`/chat`);
-    } catch (error: unknown) {
-      setShowError(true);
-      if (error instanceof Error) {
-        toast.error(error.message || 'Network error. Please try again.');
+        const loginData=data as LoginSchemaType;
+        const loginAttempt=await signIn.create({
+          identifier:loginData.email,
+          password:loginData.password
+        });
+        if(loginAttempt.status==='complete'){
+          await setActive({
+            session:loginAttempt.createdSessionId,
+          });
+          toast.success('Logged In successful');
+          setTimeout(()=>router.push('/'),300);
+        }
       } else {
-        toast.error('Network error. Please try again.');
+        if(!isSignUpLoaded){
+          return <Loader/>
+        }
+        const signupData=data as SignupSchemaType;
+        await signUp.create({
+          username:signupData.username,
+          emailAddress:signupData.email,
+          password:signupData.password,
+        });
+
+        await signUp.prepareEmailAddressVerification({
+          strategy:'email_code'
+        });
+        setVerificationPending(true);
       }
+    } catch (err:unknown) {
+      const error=err as ClerkError;
+      toast.error(error.errors[0].message);
     } finally {
       setIsLoading(false);
     }
-  }, [router]);
+  }
+
+  async function handleSignOut() {
+    try {
+      await signOut({redirectUrl:'/login'});
+      toast.success('Logout successful');
+    } catch {
+      toast.error('Error log out')
+    }
+  }
+
+  if(!isSignInLoaded || !isSignUpLoaded){
+    return <Loader/>
+  }
 
   return (
     <AuthContext.Provider value={{
@@ -108,17 +138,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       verificationPending,
       showError,
       handleSocialLogin,
-      loadingStates
+      loadingStates,
+      handleSignOut
     }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export function useAuth(): AuthContextType {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within AuthProvider");
-  }
-  return context;
-}
+export function useAuth(){
+  const context=useContext(AuthContext);
+   if (!context) throw new Error("useAuth must be used within AuthProvider");
+  return context
+};

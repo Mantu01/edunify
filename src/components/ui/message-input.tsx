@@ -191,7 +191,7 @@ const MessageInput = React.forwardRef<HTMLFormElement, MessageInputProps>(
           data-slot="message-input-form"
           {...props}
         >
-          <div className="flex flex-col border border-gray-200 rounded-xl bg-background shadow-md p-2 px-3">
+          <div className="flex flex-col border border-gray-200 rounded-xl bg-background shadow-md">
             {children}
           </div>
         </form>
@@ -250,7 +250,7 @@ const MessageInputTextarea = ({
       onChange={handleChange}
       onKeyDown={handleKeyDown}
       className={cn(
-        "flex-1 p-3 rounded-t-lg bg-background text-foreground resize-none text-sm min-h-[82px] max-h-[40vh] focus:outline-none placeholder:text-muted-foreground/50",
+        "flex-1 p-2 rounded-t-lg bg-background text-foreground resize-none text-sm h-10 focus:outline-none placeholder:text-muted-foreground/50",
         className,
       )}
       disabled={isPending}
@@ -349,7 +349,7 @@ const MessageInputError = React.forwardRef<
   return (
     <p
       ref={ref}
-      className={cn("text-sm text-[hsl(var(--destructive))] mt-2", className)}
+      className={cn("text-sm text-[hsl(var(--destructive))] ", className)}
       data-slot="message-input-error"
       {...props}
     >
@@ -380,7 +380,7 @@ const MessageInputToolbar = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn("flex justify-end mt-2 p-1", className)}
+      className={cn("flex justify-end  p-2", className)}
       data-slot="message-input-toolbar"
       {...props}
     >

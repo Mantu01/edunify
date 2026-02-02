@@ -1,37 +1,24 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { getCookieFromRequest } from '@/lib/cookies';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import {NextResponse} from 'next/server';
 
-export function proxy(request: NextRequest): NextResponse | undefined {
-  try {
-    const path = request.nextUrl.pathname;
+const isPublicRoutes=createRouteMatcher(['/login','/signup']);
+const isProtectedRoutes=createRouteMatcher(['/room','/room/(.*)','/api/(.*)','/profile','/profile/(.*)']);
 
-    const isPublicPath = path === '/login' || path === '/signup';
-
-    const token = getCookieFromRequest(request, 'token') || '';
-
-    if (isPublicPath && token) {
-      return NextResponse.redirect(new URL('/', request.nextUrl));
-    }
-
-    if (!isPublicPath && !token) {
-      return NextResponse.redirect(new URL('/login', request.nextUrl));
-    }
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error('Proxy error:', error.message);
-    }
-    return NextResponse.redirect(new URL('/login', request.nextUrl));
+export default clerkMiddleware(async(auth,req)=>{
+  const {userId}=await auth();
+  if(!userId && isProtectedRoutes(req)){
+    return NextResponse.redirect(new URL('/login',req.url));
   }
-}
+  if(userId && isPublicRoutes(req)){
+    return NextResponse.redirect(new URL('/',req.url));
+  }
+});
 
 export const config = {
   matcher: [
-    '/login',
-    '/signup',
-    '/profile',
-    '/chat',
-    '/settings',
-    '/profile/edit'
-  ]
+    // Skip Next.js internals and all static files, unless found in search params
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Always run for API routes
+    '/(api|trpc)(.*)',
+  ],
 };
