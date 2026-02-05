@@ -1,33 +1,40 @@
-'use client'
-
-import { MCQListProps, NoteProps } from "@/lib/schema";
+import { LessonPlanType, MCQListProps, NoteProps } from "@/lib/schema";
 import axios from "axios";
 import { createContext, ReactNode, useContext, useState } from "react";
 import { toast } from "sonner";
 
-type ContentType = 'default' | 'mcq' | 'note';
+type InitializePayload =
+  | {contentType: "mcq";data: MCQProps;}
+  | {contentType: "note";data: NoteProp;}
+  | {contentType: "lession_plan";data: LessionPlanProp;};
+
+type ContentType = 'default' | 'mcq' | 'note' | 'resume' | 'study_plan' | 'chat' | 'lession_plan' | 'assignment';
 type MCQProps = MCQListProps & {uniqueId:string} | undefined;
 type NoteProp = NoteProps & {uniqueId:string} | undefined;
-type InitializePayload = | { contentType: 'mcq'; data: MCQProps } | { contentType: 'note'; data: NoteProp };
+type LessionPlanProp=LessonPlanType & {uniqueId:string} | undefined;
 
 interface RoomContextType{
   currentState: ContentType;
   isLoading:boolean;
   mcqs:MCQProps;
   note:NoteProp;
+  lessionPlan:LessionPlanProp;
 
+  handleRoomIntialize:(promps: InitializePayload)=>void;
+  setCurrentState:(value:ContentType)=>void;
   fetchMcqById:(uniqueId:string)=>void;
   fetchNoteById:(uniqueId:string)=>void;
-  handleRoomIntialize:({ contentType, data }: InitializePayload)=>void;
+  fetchLessionById:(uniqueId:string)=>void;
 }
 
 const RoomContext=createContext<RoomContextType|undefined>(undefined);
 
 export const RoomProvider=({ children }: { children: ReactNode }) => {
-  const [currentState,setCurrentState]=useState<ContentType>('default');
+  const [currentState,setCurrentState]=useState<ContentType>('assignment');
   const [isLoading,setIsLoading]=useState<boolean>(false);
   const [mcqs,setMcqs]=useState<MCQProps>();
   const [note,setNote]=useState<NoteProp>();
+  const [lessionPlan,setLessionPlan]=useState<LessionPlanProp>();
 
   const handleRoomIntialize=({ contentType, data }: InitializePayload)=>{
     setCurrentState(contentType);
@@ -35,6 +42,8 @@ export const RoomProvider=({ children }: { children: ReactNode }) => {
       setMcqs(data);
     }else if(contentType==='note'){
       setNote(data)
+    }else if(contentType==='lession_plan'){
+      setLessionPlan(data);
     }
   };
 
@@ -82,15 +91,40 @@ export const RoomProvider=({ children }: { children: ReactNode }) => {
     }
   };
 
+  const fetchLessionById = async (uniqueId: string) => {
+    if(uniqueId===lessionPlan?.uniqueId)  return;
+    setIsLoading(true);
+    try {
+      if (!uniqueId) {
+        toast.error('Invalid MCQ ID');
+        return;
+      }
+      const { data } = await axios.get(`/api/lession?uniqueId=${uniqueId}`);
+      setCurrentState('lession_plan');
+      setLessionPlan(data)
+    } catch (error: any) {
+      console.error('Lession Fetch Error:', error);
+      toast.error(
+        error?.response?.data?.message || 'Failed to fetch lessions',
+        { id: 'lession-fetch' }
+      );
+    }finally{
+      setIsLoading(false);
+    }
+  };
+
   return (
     <RoomContext.Provider value={{
       currentState,
+      setCurrentState,
       isLoading,
       mcqs,
       note,
+      lessionPlan,
       handleRoomIntialize,
       fetchMcqById,
-      fetchNoteById
+      fetchNoteById,
+      fetchLessionById
     }} >
       {children}
     </RoomContext.Provider>

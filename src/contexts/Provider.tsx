@@ -6,6 +6,7 @@ import { RoomProvider } from './room-context';
 import { ClerkProvider } from '@clerk/nextjs';
 import { components } from '@/lib/tambo';
 import { TamboProvider } from '@tambo-ai/react';
+import { ChatProvider } from './chat-context';
 
 export default function Provider({ children,userToken }: { children: ReactNode, userToken?: string; }) {
   return (
@@ -14,7 +15,9 @@ export default function Provider({ children,userToken }: { children: ReactNode, 
         <TamboProvider components={components} userToken={userToken} apiKey={process.env.NEXT_PUBLIC_TAMBO_API_KEY!}>
           <AuthProvider>
             <RoomProvider>
-              {children}
+              <ChatProvider>
+                {children}
+              </ChatProvider>
             </RoomProvider>
           </AuthProvider>
         </TamboProvider>

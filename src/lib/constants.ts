@@ -153,7 +153,7 @@ export const USER_TYPE = [
 ];
 
 export const COLORS = {
-  primary: "rgba(255, 193, 7, 0.1)",
+  primary: "rgba(255, 19, 7, 0.1)",
   yellow: "#FFC107",
   green: "#4CAF50",
   orange: "#FF9800",
@@ -206,7 +206,7 @@ export const ROLE_DATA = {
   },
   teacher: {
     title: "Teacher",
-    color: "rgba(34, 197, 94, 0.1)",
+    color: "rgba(205, 184, 0, 0.1)",
     accent: "#22C55E",
     features: [
       { title: "Lesson Planning", desc: "AI-assisted curriculum design", icon: CalendarDays },
@@ -218,7 +218,7 @@ export const ROLE_DATA = {
   },
   founder: {
     title: "Founder",
-    color: "rgba(249, 115, 22, 0.1)",
+    color: "rgba(205, 184, 0, 0.1)",
     accent: "#F97316",
     features: [
       { title: "Interview Questions", desc: "Prepare technical interviews", icon: Users },
@@ -246,11 +246,3 @@ export const OPTION_COLORS = [
   'bg-orange-50/80 border-orange-300 hover:border-orange-400',
   'bg-red-50/80 border-red-300 hover:border-red-400'
 ];
-
-export const RETRO_COLORS = {
-  primary: 'bg-amber-50/10',
-  accent: 'text-amber-800',
-  border: 'border-amber-300',
-  lightBg: 'bg-amber-50/50',
-  cardBg: 'bg-white/95'
-};

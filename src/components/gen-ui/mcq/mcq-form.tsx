@@ -56,7 +56,6 @@ export default function MCQGeneratorForm() {
         formSubmission: data
       },
     });
-    await new Promise(resolve => setTimeout(resolve, 1500));
     setIsGenerating(false);
   };
   

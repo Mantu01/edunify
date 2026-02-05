@@ -26,6 +26,7 @@ import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 import type { Suggestion } from "@tambo-ai/react";
 import { useUser } from "@clerk/nextjs";
+import Image from "next/image";
 
 /**
  * Props for the MessageThreadCollapsible component
@@ -107,8 +108,9 @@ const CollapsibleContainer = React.forwardRef<
     open={isOpen}
     onOpenChange={onOpenChange}
     className={cn(
-      "fixed bottom-4 right-4 w-full max-w-sm sm:max-w-md md:max-w-lg rounded-lg shadow-lg bg-background border border-gray-200",
+      "fixed bottom-4 right-4 max-w-sm sm:max-w-md md:max-w-lg rounded-lg shadow-lg bg-background border border-gray-200",
       "transition-all duration-300 ease-in-out",
+      isOpen?"w-full":"w-20",
       className,
     )}
     {...props}
@@ -130,7 +132,6 @@ interface CollapsibleTriggerProps {
   config: {
     labels: {
       openState: string;
-      closedState: string;
     };
   };
 }
@@ -153,16 +154,16 @@ const CollapsibleTrigger = ({
           className={cn(
             "flex items-center justify-between w-full p-4",
             "hover:bg-muted/50 transition-colors",
+
           )}
           aria-expanded={isOpen}
           aria-controls="message-thread-content"
         >
-          <span>{config.labels.closedState}</span>
           <span
-            className="text-xs text-muted-foreground pl-8"
+            className="text-xs text-muted-foreground"
             suppressHydrationWarning
           >
-            {`(${shortcutText})`}
+            {shortcutText}
           </span>
         </button>
       </Collapsible.Trigger>
