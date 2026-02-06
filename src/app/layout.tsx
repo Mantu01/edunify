@@ -23,14 +23,15 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({children,}: Readonly<{children: React.ReactNode;}>) {
-  const { getToken } = await auth();
+  const { getToken, sessionClaims } = await auth();
+  const role = sessionClaims?.role as "student" | "teacher" | "founder";
   const token = await getToken();
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Provider userToken={token || undefined} >
+        <Provider userToken={token || undefined} role={role} >
           <Navigation/>
           {children}
         </Provider>

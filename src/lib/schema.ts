@@ -104,41 +104,57 @@ export const assignmentSchema = z.object({
         prompt: z.string().min(1),
         options: z.array(z.string().min(1)).min(2),
         correctAnswer: z.string().min(1),
-        marks: z.number().int().min(1),
       }),
       z.object({
         id: z.string(),
         questionType: z.literal("short_answer"),
         prompt: z.string().min(1),
         correctAnswer: z.string().min(1),
-        marks: z.number().int().min(1),
       }),
       z.object({
         id: z.string(),
         questionType: z.literal("long_answer"),
         prompt: z.string().min(1),
         evaluationGuidelines: z.string().min(1),
-        marks: z.number().int().min(1),
       }),
       z.object({
         id: z.string(),
         questionType: z.literal("true_false"),
         prompt: z.string().min(1),
         correctAnswer: z.boolean(),
-        marks: z.number().int().min(1),
       }),
       z.object({
         id: z.string(),
         questionType: z.literal("fill_in_the_blanks"),
         prompt: z.string().min(1),
         correctAnswers: z.array(z.string().min(1)).min(1),
-        marks: z.number().int().min(1),
       }),
     ])
   ).min(1),
-  lastSubmissionAt: z.date(),
+  lastSubmissionHours: z.number().int().min(1),
 });
 
+export const TipSchema = z.object({
+  type: z.enum(["good", "improve"]),
+  explanation: z.string(),
+  tip: z.string()
+});
+
+export const SectionSchema = z.object({
+  score: z.number(),
+  tips: z.array(TipSchema)
+});
+
+export const ResumeAnalysisSchema = z.object({
+  ats: SectionSchema,
+  content: SectionSchema,
+  skills: SectionSchema,
+  structure: SectionSchema,
+  toneStyle: SectionSchema,
+  overallScore: z.number()
+});
+
+export type ResumeAnalysisType = z.infer<typeof ResumeAnalysisSchema>;
 export type AssignmentType = z.infer<typeof assignmentSchema>;
 export type LessonPlanType = z.infer<typeof LessonPlanSchema>;
 export type NoteProps = z.infer<typeof notePropsSchema>;

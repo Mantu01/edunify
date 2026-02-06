@@ -7,7 +7,7 @@ export default function PageWithChat() {
       <RoomPage/>
       <MessageThreadCollapsible
         defaultOpen={false}
-        className="fixed slide-out-to-bottom-1/2 right-4 bg-linear-to-b from-yellow-50/20 via-white to-orange-50/20 border-black"
+        className="fixed slide-out-to-bottom-1/2 right-4 bg-linear-to-b shadow-2xl shadow-black from-yellow-50/20 via-yellow-50 to-orange-50/20 border-black"
       />
     </div>
   );

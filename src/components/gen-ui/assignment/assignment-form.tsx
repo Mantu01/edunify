@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Trash2, BookOpen, Target, Clock, FileQuestion } from "lucide-react";
 import { useState } from "react";
+import { useTamboThreadInput } from "@tambo-ai/react";
 
 const assignmentFormSchema = z.object({
   subject: z.string().min(1),
@@ -42,6 +43,8 @@ const QUESTION_TYPES = [
 
 export default function AssignmentForm() {
   const [objectives, setObjectives] = useState<string[]>([""]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { submit,setValue:setTamboInputValue } = useTamboThreadInput();
 
   const form = useForm<z.infer<typeof assignmentFormSchema>>({
     resolver: zodResolver(assignmentFormSchema),
@@ -58,8 +61,21 @@ export default function AssignmentForm() {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof assignmentFormSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof assignmentFormSchema>) => {
+    setIsSubmitting(true);
+    try {
+      setTamboInputValue('Generate Assignment according to the given form data.');
+      await submit({
+        streamResponse: true,
+        additionalContext: {
+          formSubmission: values
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const addObjective = () => {
@@ -342,6 +358,7 @@ export default function AssignmentForm() {
             />
 
             <Button 
+              disabled={isSubmitting}
               type="submit" 
               className="w-full border-2 border-yellow-600 bg-yellow-600 text-sm font-bold uppercase tracking-wider hover:bg-yellow-700 hover:border-yellow-700"
             >

@@ -10,18 +10,20 @@ const Chat: React.FC = () => {
   const role = sessionClaims?.role as keyof typeof roleColors;
 
   return (
-    <div className="h-160 flex flex-col font-['Inter'] antialiased">
-      <div className="flex-1 flex overflow-hidden">
-        <div className="hidden lg:flex w-1/4 flex-col border-r">
-          <ChatSidebar
-            role={role}
-          />
+      <ChatProvider>
+        <div className="h-160 flex flex-col font-['Inter'] antialiased">
+          <div className="flex-1 flex overflow-hidden">
+            <div className="hidden lg:flex w-1/4 flex-col border-r">
+              <ChatSidebar
+                role={role}
+              />
+            </div>
+            <div className="flex-1 flex flex-col">
+              <ChatInterface role={role} />
+            </div>
+          </div>
         </div>
-        <div className="flex-1 flex flex-col">
-          <ChatInterface role={role} />
-        </div>
-      </div>
-    </div>
+      </ChatProvider>
   );
 };
 

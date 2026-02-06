@@ -1,4 +1,4 @@
-import { LessonPlanType, MCQListProps, NoteProps } from "@/lib/schema";
+import { AssignmentType, LessonPlanType, MCQListProps, NoteProps, ResumeAnalysisType } from "@/lib/schema";
 import axios from "axios";
 import { createContext, ReactNode, useContext, useState } from "react";
 import { toast } from "sonner";
@@ -6,12 +6,16 @@ import { toast } from "sonner";
 type InitializePayload =
   | {contentType: "mcq";data: MCQProps;}
   | {contentType: "note";data: NoteProp;}
-  | {contentType: "lession_plan";data: LessionPlanProp;};
+  | {contentType: "lession_plan";data: LessionPlanProp;}
+  | {contentType: "assignment";data: AssignmentProp;}
+  | {contentType:"resume" ; data:ResumeAnalysisProp}
 
 type ContentType = 'default' | 'mcq' | 'note' | 'resume' | 'study_plan' | 'chat' | 'lession_plan' | 'assignment';
 type MCQProps = MCQListProps & {uniqueId:string} | undefined;
 type NoteProp = NoteProps & {uniqueId:string} | undefined;
 type LessionPlanProp=LessonPlanType & {uniqueId:string} | undefined;
+type AssignmentProp=AssignmentType & {uniqueId:string, createdAt?:Date} | undefined;
+type ResumeAnalysisProp=ResumeAnalysisType & {uniqueId:string, createdAt?:Date} | undefined;
 
 interface RoomContextType{
   currentState: ContentType;
@@ -19,22 +23,28 @@ interface RoomContextType{
   mcqs:MCQProps;
   note:NoteProp;
   lessionPlan:LessionPlanProp;
+  assignment:AssignmentProp;
+  resumeAnalysis:ResumeAnalysisProp;
 
   handleRoomIntialize:(promps: InitializePayload)=>void;
   setCurrentState:(value:ContentType)=>void;
   fetchMcqById:(uniqueId:string)=>void;
   fetchNoteById:(uniqueId:string)=>void;
   fetchLessionById:(uniqueId:string)=>void;
+  fetchAssignmentById:(uniqueId:string)=>void;
+  fetchResumeAnalysisById:(uniqueId:string)=>void;
 }
 
 const RoomContext=createContext<RoomContextType|undefined>(undefined);
 
 export const RoomProvider=({ children }: { children: ReactNode }) => {
-  const [currentState,setCurrentState]=useState<ContentType>('assignment');
+  const [currentState,setCurrentState]=useState<ContentType>('default');
   const [isLoading,setIsLoading]=useState<boolean>(false);
   const [mcqs,setMcqs]=useState<MCQProps>();
   const [note,setNote]=useState<NoteProp>();
   const [lessionPlan,setLessionPlan]=useState<LessionPlanProp>();
+  const [assignment,setAssignment]=useState<AssignmentProp>();
+  const [resumeAnalysis,setResumeAnalysis]=useState<ResumeAnalysisProp>();
 
   const handleRoomIntialize=({ contentType, data }: InitializePayload)=>{
     setCurrentState(contentType);
@@ -44,10 +54,15 @@ export const RoomProvider=({ children }: { children: ReactNode }) => {
       setNote(data)
     }else if(contentType==='lession_plan'){
       setLessionPlan(data);
+    }else if(contentType==='assignment'){
+      setAssignment(data);
+    }else if (contentType==='resume'){
+      setResumeAnalysis(data);
     }
   };
 
   const fetchNoteById=async(uniqueId:string)=>{
+    setCurrentState('note');
     if(uniqueId===mcqs?.uniqueId)  return;
     setIsLoading(true);
     try {
@@ -56,7 +71,6 @@ export const RoomProvider=({ children }: { children: ReactNode }) => {
         return;
       }
       const { data } = await axios.get(`/api/note?uniqueId=${uniqueId}`);
-      setCurrentState('note');
       setNote(data.note)
     } catch (error: any) {
       console.error('MCQ Fetch Error:', error);
@@ -70,6 +84,7 @@ export const RoomProvider=({ children }: { children: ReactNode }) => {
   };
 
   const fetchMcqById = async (uniqueId: string) => {
+    setCurrentState('mcq');
     if(uniqueId===mcqs?.uniqueId)  return;
     setIsLoading(true);
     try {
@@ -78,7 +93,6 @@ export const RoomProvider=({ children }: { children: ReactNode }) => {
         return;
       }
       const { data } = await axios.get(`/api/mcq/me?uniqueId=${uniqueId}`);
-      setCurrentState('mcq');
       setMcqs(data.mcqLists)
     } catch (error: any) {
       console.error('MCQ Fetch Error:', error);
@@ -92,6 +106,7 @@ export const RoomProvider=({ children }: { children: ReactNode }) => {
   };
 
   const fetchLessionById = async (uniqueId: string) => {
+    setCurrentState('lession_plan');
     if(uniqueId===lessionPlan?.uniqueId)  return;
     setIsLoading(true);
     try {
@@ -100,13 +115,56 @@ export const RoomProvider=({ children }: { children: ReactNode }) => {
         return;
       }
       const { data } = await axios.get(`/api/lession?uniqueId=${uniqueId}`);
-      setCurrentState('lession_plan');
       setLessionPlan(data)
     } catch (error: any) {
       console.error('Lession Fetch Error:', error);
       toast.error(
         error?.response?.data?.message || 'Failed to fetch lessions',
         { id: 'lession-fetch' }
+      );
+    }finally{
+      setIsLoading(false);
+    }
+  };
+
+  const fetchAssignmentById = async (uniqueId: string) => {
+    setCurrentState('assignment');
+    if(uniqueId===assignment?.uniqueId)  return;
+    setIsLoading(true);
+    try {
+      if (!uniqueId) {
+        toast.error('Invalid Assignment ID');
+        return;
+      }
+      const { data } = await axios.get(`/api/assignments?uniqueId=${uniqueId}`);
+      setAssignment(data.assignment)
+    } catch (error: any) {
+      console.error('Assignment Fetch Error:', error);
+      toast.error(
+        error?.response?.data?.message || 'Failed to fetch assignments',
+        { id: 'assignment-fetch' }
+      );
+    }finally{
+      setIsLoading(false);
+    }
+  };
+
+  const fetchResumeAnalysisById = async (uniqueId: string) => {
+    setCurrentState('resume');
+    if(uniqueId===assignment?.uniqueId)  return;
+    setIsLoading(true);
+    try {
+      if (!uniqueId) {
+        toast.error('Invalid Resume ID');
+        return;
+      }
+      const { data } = await axios.get(`/api/resume?uniqueId=${uniqueId}`);
+      setResumeAnalysis(data)
+    } catch (error: any) {
+      console.error('Resume Fetch Error:', error);
+      toast.error(
+        error?.response?.data?.message || 'Failed to fetch Resumes',
+        { id: 'resume-fetch' }
       );
     }finally{
       setIsLoading(false);
@@ -121,10 +179,14 @@ export const RoomProvider=({ children }: { children: ReactNode }) => {
       mcqs,
       note,
       lessionPlan,
+      assignment,
+      resumeAnalysis,
       handleRoomIntialize,
       fetchMcqById,
       fetchNoteById,
-      fetchLessionById
+      fetchLessionById,
+      fetchAssignmentById,
+      fetchResumeAnalysisById
     }} >
       {children}
     </RoomContext.Provider>

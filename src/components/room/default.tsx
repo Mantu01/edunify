@@ -10,6 +10,17 @@ export default function RolePage() {
   const role=sessionClaims?.role as RoleType
   const roleData = ROLE_DATA[role];
 
+  const handleClick = () => {
+    const event = new KeyboardEvent("keydown", {
+      key: "k",
+      code: "KeyK",
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    document.dispatchEvent(event);
+  };
+
   return (
     <div className="min-h-screen p-6 md:p-8" style={{ fontFamily: "'Space Grotesk', sans-serif", backgroundColor: roleData.color }}>
       <div className="max-w-7xl mx-auto">
@@ -35,8 +46,8 @@ export default function RolePage() {
                 <CardDescription className="text-base">{feature.desc}</CardDescription>
               </CardHeader>
               <CardContent>
-                <Button className="w-full text-base py-6" style={{ backgroundColor: roleData.accent }}>
-                  Access Tool
+                <Button onClick={handleClick} className="w-full text-base py-6 cursor-pointer" style={{ backgroundColor: roleData.accent }}>
+                  Start By chatting
                 </Button>
               </CardContent>
             </Card>

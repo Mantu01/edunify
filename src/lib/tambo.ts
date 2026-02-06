@@ -1,14 +1,16 @@
 import type { TamboComponent } from "@tambo-ai/react";
-import { emptyPropsSchema, MCQListPropsSchema, notePropsSchema, LessonPlanSchema } from "./schema";
+import { emptyPropsSchema, MCQListPropsSchema, notePropsSchema, LessonPlanSchema, assignmentSchema, ResumeAnalysisSchema } from "./schema";
 import MCQGeneratorForm from "@/components/gen-ui/mcq/mcq-form";
 import MCQRequst from "@/components/gen-ui/mcq/mcq-req";
 import NoteGeneratorForm from "@/components/gen-ui/notes/note-generation-form";
 import NoteRequst from "@/components/gen-ui/notes/note-req";
-import ResumeGeneratorForm from "@/components/gen-ui/resume/resume-form";
 import ChatRequst from "@/components/gen-ui/chat/chat-req";
 import LessonPlanForm from "@/components/gen-ui/lession-plan/lession-form";
 import LessionRequst from "@/components/gen-ui/lession-plan/lession-req";
 import AssignmentForm from "@/components/gen-ui/assignment/assignment-form";
+import AssignmentRequst from "@/components/gen-ui/assignment/assignment-req";
+import ResumeAnalyzerForm from "@/components/gen-ui/resume/resume-form";
+import ResumeAnalticsRequst from "@/components/gen-ui/resume/resume-req";
 
 export const components: TamboComponent[] = [
   {
@@ -36,12 +38,6 @@ export const components: TamboComponent[] = [
     propsSchema:notePropsSchema
   },
   {
-    component:ResumeGeneratorForm,
-    name:'Resume-generator-form',
-    description:'A component to collect the user input to generate resume.',
-    propsSchema:emptyPropsSchema
-  },
-  {
     component:ChatRequst,
     name:"chat-interface",
     description:"A component to engage with an AI assistant for chatting and solving queries efficiently.",
@@ -62,7 +58,25 @@ export const components: TamboComponent[] = [
   {
     component:AssignmentForm,
     name:"assignment-form",
-    description:"A component to collect user input to generate assignment for practicing.",
+    description:"A component to collect user input to generate assignment which contains questions for practicing.",
     propsSchema:emptyPropsSchema,
+  },
+  {
+    component:AssignmentRequst,
+    name:"assignment-display",
+    description:"A component for displaying generated assignment which contains question for practing.",
+    propsSchema:assignmentSchema,
+  },
+  {
+    component:ResumeAnalyzerForm,
+    name:"resume-analyzer-form",
+    description:"A component to upload resume and job description for analysis.",
+    propsSchema:emptyPropsSchema,
+  },
+  {
+    component:ResumeAnalticsRequst,
+    name:"resume-analysis-display",
+    description:"A component for displaying resume analysis result.",
+    propsSchema:ResumeAnalysisSchema,
   }
 ];

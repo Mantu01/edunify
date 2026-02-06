@@ -3,6 +3,24 @@ import { Button } from "@/components/ui/button";
 import { Github, Twitter, Linkedin } from "lucide-react";
 import Logo from "../logo/logo";
 
+const socialLinks = [
+  {
+    name: "Twitter",
+    icon: Twitter,
+    url: "https://x.com/mantu_kumar91",
+  },
+  {
+    name: "Github",
+    icon: Github,
+    url: "https://github.com/mantu01",
+  },
+  {
+    name: "LinkedIn",
+    icon: Linkedin,
+    url: "https://www.linkedin.com/in/mantu-kumar-2b5912238/",
+  },
+];
+
 export function Footer() {
   return (
     <footer className="border-t border-yellow-200/20 bg-gray-50 dark:bg-gray-950">
@@ -60,15 +78,22 @@ export function Footer() {
           <div>
             <h4 className="font-semibold text-gray-900 dark:text-white">Connect</h4>
             <div className="mt-4 flex space-x-4">
-              <Button variant="outline" size="icon" className="border-gray-300">
-                <Twitter className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="icon" className="border-gray-300">
-                <Github className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="icon" className="border-gray-300">
-                <Linkedin className="h-4 w-4" />
-              </Button>
+              {socialLinks.map((social) => {
+                const Icon = social.icon;
+                return (
+                  <Button
+                    key={social.name}
+                    asChild
+                    variant="outline"
+                    size="icon"
+                    className="border-gray-300"
+                  >
+                    <a href={social.url} target="_blank" rel="noopener noreferrer">
+                      <Icon className="h-4 w-4" />
+                    </a>
+                  </Button>
+                );
+              })}
             </div>
           </div>
         </div>

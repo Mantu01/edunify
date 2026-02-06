@@ -8,16 +8,14 @@ import { components } from '@/lib/tambo';
 import { TamboProvider } from '@tambo-ai/react';
 import { ChatProvider } from './chat-context';
 
-export default function Provider({ children,userToken }: { children: ReactNode, userToken?: string; }) {
+export default function Provider({ children,userToken,role }: { children: ReactNode, userToken?: string; role:"student" | "teacher" | "founder" }) {
   return (
     <Suspense fallback={null}>
       <ClerkProvider>
         <TamboProvider components={components} userToken={userToken} apiKey={process.env.NEXT_PUBLIC_TAMBO_API_KEY!}>
           <AuthProvider>
             <RoomProvider>
-              <ChatProvider>
-                {children}
-              </ChatProvider>
+              {children}
             </RoomProvider>
           </AuthProvider>
         </TamboProvider>
