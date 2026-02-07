@@ -18,7 +18,7 @@ export function Assignment() {
   const { assignment } = useRoom();
 
   const role = sessionClaims?.role as keyof typeof roleColors;
-  const colors = roleColors[role];
+  const colors = roleColors[role ?? 'student'];
 
   useEffect(() => {
     if (!assignment?.createdAt || !assignment?.lastSubmissionHours) return;

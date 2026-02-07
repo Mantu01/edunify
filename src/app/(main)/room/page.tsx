@@ -3,7 +3,7 @@ import { MessageThreadCollapsible } from "@/components/ui/message-thread-collaps
 
 export default function PageWithChat() {
   return (
-    <div className="relative min-h-175 p-5">
+    <div className="relative min-h-175">
       <RoomPage/>
       <MessageThreadCollapsible
         defaultOpen={false}

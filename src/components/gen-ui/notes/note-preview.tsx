@@ -6,6 +6,7 @@ import { roleColors } from '@/lib/constants';
 import MarkdownPreview from '@/components/ui/custome-markdown-preview';
 import { useAuth } from '@clerk/nextjs';
 import { useRoom } from '@/contexts/room-context';
+import { toast } from 'sonner';
 
 const NOTE_TYPE_CONFIG = {
   summary: { icon: FileText, label: 'Summary', color: 'text-yellow-600' },
@@ -34,7 +35,7 @@ const NoteComponent: React.FC = () => {
   const {content,depthLevel,noteType,subject,title,uniqueId}=note;
   
   const role = sessionClaims?.role as keyof typeof roleColors;
-  const roleColor = roleColors[role];
+  const roleColor = roleColors[role ?? 'student'];
   const NoteTypeIcon = NOTE_TYPE_CONFIG[noteType].icon;
 
   const sidebarData = [
@@ -44,11 +45,11 @@ const NoteComponent: React.FC = () => {
   ];
 
   const handleDownloadPDF = () => {
-    console.log('Downloading PDF for note:', uniqueId);
+    toast.info('This feature is not available yet.')
   };
 
   return (
-    <div className={`flex h-160 ${roleColor.bg} pb-6 gap-6`}>
+    <div className={`flex h-160 ${roleColor.bg} p-6 gap-6`}>
       <div className="w-1/5 flex flex-col space-y-6">
         <Card className={`${roleColor.border} border-2 ${roleColor.bg} backdrop-blur-sm`}>
           <CardContent className="p-6">

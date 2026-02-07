@@ -12,7 +12,7 @@ const socialLinks = [
   {
     name: "Github",
     icon: Github,
-    url: "https://github.com/mantu01",
+    url: "https://github.com/Mantu01/edunify",
   },
   {
     name: "LinkedIn",
@@ -100,7 +100,7 @@ export function Footer() {
 
         <div className="mt-8 border-t border-gray-200 pt-8 dark:border-gray-800">
           <p className="text-center text-sm text-gray-600 dark:text-gray-300">
-            © {new Date().getFullYear()} edunify. All rights reserved.
+            © {new Date().getFullYear()} edunify. No rights reserved, You can do whatever you want..
           </p>
         </div>
       </div>

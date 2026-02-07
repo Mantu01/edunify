@@ -24,7 +24,7 @@ export function Sidebar() {
   ]
 
   return (
-    <div className="w-full lg:w ">
+    <div className="w-1/3 lg:w ">
       <div className="rounded-xl border shadow-sm p-6 bg-amber-50">
         <nav className="space-y-2 ">
           {navigation.map((item) => {

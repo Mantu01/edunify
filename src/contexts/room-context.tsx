@@ -28,11 +28,11 @@ interface RoomContextType{
 
   handleRoomIntialize:(promps: InitializePayload)=>void;
   setCurrentState:(value:ContentType)=>void;
-  fetchMcqById:(uniqueId:string)=>void;
-  fetchNoteById:(uniqueId:string)=>void;
-  fetchLessionById:(uniqueId:string)=>void;
-  fetchAssignmentById:(uniqueId:string)=>void;
-  fetchResumeAnalysisById:(uniqueId:string)=>void;
+  fetchMcqById:(uniqueId:string,keepStateSame?:boolean)=>void;
+  fetchNoteById:(uniqueId:string,keepStateSame?:boolean)=>void;
+  fetchLessionById:(uniqueId:string,keepStateSame?:boolean)=>void;
+  fetchAssignmentById:(uniqueId:string,keepStateSame?:boolean)=>void;
+  fetchResumeAnalysisById:(uniqueId:string,keepStateSame?:boolean)=>void;
 }
 
 const RoomContext=createContext<RoomContextType|undefined>(undefined);
@@ -61,9 +61,11 @@ export const RoomProvider=({ children }: { children: ReactNode }) => {
     }
   };
 
-  const fetchNoteById=async(uniqueId:string)=>{
-    setCurrentState('note');
-    if(uniqueId===mcqs?.uniqueId)  return;
+  const fetchNoteById=async(uniqueId:string,keepStateSame?:boolean)=>{
+    if(!keepStateSame){
+      setCurrentState('note');
+    }
+    if(uniqueId===note?.uniqueId)  return;
     setIsLoading(true);
     try {
       if (!uniqueId) {
@@ -83,8 +85,10 @@ export const RoomProvider=({ children }: { children: ReactNode }) => {
     }
   };
 
-  const fetchMcqById = async (uniqueId: string) => {
-    setCurrentState('mcq');
+  const fetchMcqById = async (uniqueId: string,keepStateSame?:boolean) => {
+    if(!keepStateSame){
+      setCurrentState('mcq');
+    }
     if(uniqueId===mcqs?.uniqueId)  return;
     setIsLoading(true);
     try {
@@ -105,8 +109,10 @@ export const RoomProvider=({ children }: { children: ReactNode }) => {
     }
   };
 
-  const fetchLessionById = async (uniqueId: string) => {
-    setCurrentState('lession_plan');
+  const fetchLessionById = async (uniqueId: string,keepStateSame?:boolean) => {
+    if(!keepStateSame){
+      setCurrentState('lession_plan');
+    }
     if(uniqueId===lessionPlan?.uniqueId)  return;
     setIsLoading(true);
     try {
@@ -127,8 +133,10 @@ export const RoomProvider=({ children }: { children: ReactNode }) => {
     }
   };
 
-  const fetchAssignmentById = async (uniqueId: string) => {
-    setCurrentState('assignment');
+  const fetchAssignmentById = async (uniqueId: string,keepStateSame?:boolean) => {
+    if(!keepStateSame){
+      setCurrentState('assignment');
+    }
     if(uniqueId===assignment?.uniqueId)  return;
     setIsLoading(true);
     try {
@@ -149,8 +157,10 @@ export const RoomProvider=({ children }: { children: ReactNode }) => {
     }
   };
 
-  const fetchResumeAnalysisById = async (uniqueId: string) => {
-    setCurrentState('resume');
+  const fetchResumeAnalysisById = async (uniqueId: string,keepStateSame?:boolean) => {
+    if(!keepStateSame){
+      setCurrentState('resume');
+    }
     if(uniqueId===assignment?.uniqueId)  return;
     setIsLoading(true);
     try {
