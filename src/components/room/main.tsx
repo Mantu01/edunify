@@ -4,7 +4,6 @@ import { useRoom } from "@/contexts/room-context";
 import MCQList from "../gen-ui/mcq/mcq-list";
 import RolePage from "./default";
 import NoteDisplay from "../gen-ui/notes/note-preview";
-import StudyPlanForm from "../gen-ui/study-plan/study-plan-form";
 import Chat from "../gen-ui/chat/chat";
 import LessonPlanComponent from "../gen-ui/lession-plan/lession-plan-info";
 import { Assignment } from "../gen-ui/assignment/assignment";
@@ -17,7 +16,6 @@ export const RoomPage = () => {
   if (currentState === "mcq") return <MCQList/>;
   if(currentState==='note')   return <NoteDisplay/> ;
   if(currentState==='resume') return <ResumePage/>
-  if(currentState==='study_plan') return <StudyPlanForm/>
   if(currentState==='chat')  return <Chat/>
   if(currentState==='lession_plan') return <LessonPlanComponent/>
   if(currentState==='assignment')  return <Assignment/>
