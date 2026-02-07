@@ -15,11 +15,11 @@ const Chat: React.FC = () => {
           <div className="flex-1 flex overflow-hidden">
             <div className="hidden lg:flex w-1/4 flex-col border-r">
               <ChatSidebar
-                role={role}
+                role={role ?? 'student'}
               />
             </div>
             <div className="flex-1 flex flex-col">
-              <ChatInterface role={role} />
+              <ChatInterface role={role ?? 'student'} />
             </div>
           </div>
         </div>

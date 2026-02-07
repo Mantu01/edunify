@@ -8,7 +8,7 @@ import { useAuth } from "@clerk/nextjs";
 export default function RolePage() {
   const {sessionClaims}=useAuth();
   const role=sessionClaims?.role as RoleType
-  const roleData = ROLE_DATA[role];
+  const roleData = ROLE_DATA[role ?? 'student'];
 
   const handleClick = () => {
     const event = new KeyboardEvent("keydown", {

@@ -41,7 +41,7 @@ export default function NoteGeneratorForm() {
   const {sessionClaims}=useAuth();
 
   const role = sessionClaims?.role as keyof typeof roleColors;
-  const colors = roleColors[role]
+  const colors = roleColors[role ?? 'student']
 
   const {register,handleSubmit,watch,setValue,formState: { errors }} = useForm<FormData>({
     resolver: zodResolver(formSchema),

@@ -44,7 +44,7 @@ export default function ResumeAnalyzerForm() {
   const { addContextAttachment } = useTamboContextAttachment();
   
   const role = sessionClaims?.role as keyof typeof roleColors;
-  const colors = roleColors[role];
+  const colors = roleColors[role ?? 'student'];
   
   const { register, handleSubmit, formState: { errors } } = useForm<ResumeFormData>({
     resolver: zodResolver(resumeFormSchema),

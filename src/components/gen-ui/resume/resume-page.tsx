@@ -18,7 +18,7 @@ export default function ResumePage() {
             <Sidebar />
           </div>
           <div className="w-4/5 h-full border-l">
-            <AnalysisSection userRole={role}/>
+            <AnalysisSection userRole={role ?? 'student'}/>
           </div>
         </div>
       </Card>
